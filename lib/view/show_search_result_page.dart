@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qiita_application/ripository.dart';
 
 class ShowSearchResult extends StatefulWidget {
   const ShowSearchResult({Key? key}) : super(key: key);
@@ -53,6 +54,7 @@ class _ShowSearchResultState extends State<ShowSearchResult> {
         ),
         onTap: () {
           print("$titleがTapされました");
+          fetchParsonDataList();
         },
         onLongPress: () {
           // 長押し時の処理
