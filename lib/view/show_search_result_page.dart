@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qiita_application/api/qiita_repository.dart';
+import 'package:qiita_application/view/detail_article/detail_article_page.dart';
 import 'package:qiita_application/view_model/article_list_view_model.dart';
 
 class ShowSearchResultState extends ConsumerWidget {
@@ -21,11 +21,12 @@ class ShowSearchResultState extends ConsumerWidget {
                   itemCount: qiitaDataList.length,
                   itemBuilder: (BuildContext context, int index) {
                     final qiitaData = qiitaDataList[index];
-                    return Card(
-                      child: ListTile(
-                        title: Text(qiitaData.title.toString()),
-                      ),
-                    );
+                    return resultItem(context, qiitaData);
+                    // return Card(
+                    //   child: ListTile(
+                    //     title: Text(qiitaData.title.toString()),
+                    //   ),
+                    // );
                   },
                 );
               },
@@ -36,33 +37,38 @@ class ShowSearchResultState extends ConsumerWidget {
     );
   }
 
-  Widget resultItem(String title) {
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.grey,
-            width: 1.5,
+  Widget resultItem(context, qiitaData) {
+    // 記事のタイトル
+    String title = qiitaData.title.toString();
+    return GestureDetector(
+      child: Container(
+        padding: const EdgeInsets.all(1.5),
+        decoration: const BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.grey,
+              width: 1.5,
+            ),
           ),
         ),
-      ),
-      child: ListTile(
-        title: Text(
-          title,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 16,
+        child: ListTile(
+          title: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+            ),
           ),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ArticleDetailPage(
+                  article: qiitaData,
+                ),
+              ),
+            );
+          },
         ),
-        onTap: () {
-          print("$titleがTapされました");
-          // fetchParsonDataList();
-          fetchQiitaArticles();
-        },
-        onLongPress: () {
-          // 長押し時の処理
-          print("$titleが長押しされました");
-        },
       ),
     );
   }
