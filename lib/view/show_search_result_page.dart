@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qiita_application/api/qiita_repository.dart';
+import 'package:qiita_application/view_model/article_list_view_model.dart';
 
-class ShowSearchResult extends StatefulWidget {
-  const ShowSearchResult({Key? key}) : super(key: key);
+class ShowSearchResultState extends ConsumerWidget {
+  const ShowSearchResultState({super.key});
 
   @override
-  State<ShowSearchResult> createState() => _ShowSearchResultState();
-}
-
-class _ShowSearchResultState extends State<ShowSearchResult> {
-  @override
-  Widget build(BuildContext context) {
-    var list = [
-      "メッセージ",
-      "メッセージ",
-      "メッセージ",
-      "メッセージ",
-      "メッセージ",
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final qiitaDataList = ref.watch(articleListViewModelProvider);
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: const Text("Qiita検索表示"),
         ),
-        body: ListView.builder(itemBuilder: (BuildContext context, int index) {
-          if (index < list.length) {
-            return resultItem(list[index]);
-          }
-          return null;
-          // return resultItem(list[index]);
-        }),
+        body: Container(
+          child: qiitaDataList.when(
+              data: (qiitaDataList) {
+                return ListView.builder(
+                  itemCount: qiitaDataList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final qiitaData = qiitaDataList[index];
+                    return Card(
+                      child: ListTile(
+                        title: Text(qiitaData.title.toString()),
+                      ),
+                    );
+                  },
+                );
+              },
+              error: (error, stack) => Text('Error: $error'),
+              loading: () => const Center(child: CircularProgressIndicator())),
+        ),
       ),
     );
   }
