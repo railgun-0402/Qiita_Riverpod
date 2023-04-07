@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qiita_application/view/detail_article/detail_article_page.dart';
+import 'package:qiita_application/view/search_top/search_top_strings.dart';
 import 'package:qiita_application/view_model/get_article_list/article_list_view_model.dart';
 
 class SearchArticlePage extends ConsumerWidget {
@@ -54,7 +55,7 @@ class SearchArticleTopPageState extends ConsumerState<SearchArticleTopPage> {
                 child: TextField(
                   controller: searchController,
                   decoration: const InputDecoration(
-                    hintText: 'キーワードを入力してください',
+                    hintText: hintText,
                   ),
                   onChanged: (value) {
                     ref.read(searchState.notifier).update((state) => value);
@@ -101,7 +102,7 @@ class ShowArticle extends ConsumerWidget {
               },
             );
           },
-          error: (error, stack) => Text('Error: $error'),
+          error: (error, stack) => Text('$errorString:$error'),
           loading: () => const Center(child: CircularProgressIndicator())),
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qiita_application/view/detail_article/detail_article_page.dart';
 import 'package:qiita_application/view/search_top/search_top_page.dart';
 import 'package:qiita_application/view/settings/setting_top_page.dart';
+import 'package:qiita_application/view/show_search_result/show_search_result_strings.dart';
 import 'package:qiita_application/view_model/get_article_list/article_list_view_model.dart';
 
 class ShowSearchResultState extends StatelessWidget {
@@ -12,9 +13,9 @@ class ShowSearchResultState extends StatelessWidget {
   static const double tabBarHeight = 10;
 
   static const tabs = [
-    _TabWidget(tabTitle: '人気記事'),
-    _TabWidget(tabTitle: '記事検索'),
-    _TabWidget(tabTitle: '設定'),
+    _TabWidget(tabTitle: popularTabTitle),
+    _TabWidget(tabTitle: searchArticleTabTitle),
+    _TabWidget(tabTitle: settingTabTitle),
   ];
 
   @override
@@ -24,7 +25,7 @@ class ShowSearchResultState extends StatelessWidget {
         length: tabs.length,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("Qiita検索表示"),
+            title: const Text(screenTitle),
             bottom: const TabBar(tabs: <Widget>[
               Tab(
                 icon: Icon(Icons.bolt),
@@ -69,7 +70,7 @@ class ShowArticle extends ConsumerWidget {
               },
             );
           },
-          error: (error, stack) => Text('Error: $error'),
+          error: (error, stack) => Text("$errorString:$error"),
           loading: () => const Center(child: CircularProgressIndicator())),
     );
   }
