@@ -22,6 +22,10 @@ linter:
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
   rules:
+    avoid_print: true # print文があると警告が出る
+    prefer_single_quotes: true # シングルクオートでないと警告が出る
+    always_use_package_imports: true # 相対パスでインポートすると警告が出る。（例）import: 'foo.dart'
+    avoid_annotating_with_dynamic: true # dynamicで型をつけると警告が出る。
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 
