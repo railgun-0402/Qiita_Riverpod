@@ -41,6 +41,7 @@ dependencies:
   dio: ^5.1.0
   webview_flutter: ^2.0.8
   http: ^0.13.5
+  url_launcher: ^6.1.10
 
 dev_dependencies:
   flutter_test:
