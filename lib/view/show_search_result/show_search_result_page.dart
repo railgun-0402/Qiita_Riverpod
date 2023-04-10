@@ -34,12 +34,12 @@ class ShowSearchResultState extends StatelessWidget {
               Tab(icon: Icon(Icons.settings)),
             ]),
           ),
-          body: Padding(
-            padding: const EdgeInsets.only(top: tabBarHeight),
+          body: const Padding(
+            padding: EdgeInsets.only(top: tabBarHeight),
             child: TabBarView(
               children: [
-                const ShowArticle(),
-                const SearchArticlePage(),
+                ShowArticle(),
+                SearchArticlePage(),
                 SettingTopPage(),
               ],
             ),
