@@ -5,4 +5,4 @@
 const String hintText = 'キーワードを入力してください';
 
 /// エラーログ
-const String errorString = "Error";
+const String errorString = 'Error';

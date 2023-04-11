@@ -7,13 +7,13 @@ dynamic fetchQiitaArticles() async {
       'https://qiita.com/api/v2/items?page=1&per_page=20&query=qiita+user%3AQiita';
   final response = await Dio().get(url);
 
-  var articles;
+  List<dynamic> articles;
 
   if (response.statusCode == 200) {
     // null Check
     if (response.data != null) {
       articles = response.data
-          .map((dynamic i) => QiitaArticle.fromJson(i as Map<String, dynamic>))
+          .map((i) => QiitaArticle.fromJson(i as Map<String, dynamic>))
           .toList();
     } else {
       throw Exception('Data is not exist');
