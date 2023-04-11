@@ -70,7 +70,7 @@ class ShowArticle extends ConsumerWidget {
               },
             );
           },
-          error: (error, stack) => Text("$errorString:$error"),
+          error: (error, stack) => Text('$errorString:$error'),
           loading: () => const Center(child: CircularProgressIndicator())),
     );
   }

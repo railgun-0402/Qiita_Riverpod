@@ -145,7 +145,6 @@ class OpenMyPage extends ConsumerWidget {
             ),
           ),
           onTap: () {
-            print("ボタン押下");
             openQiitaPage(stringUri);
           },
         ),
