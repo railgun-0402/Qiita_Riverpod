@@ -13,7 +13,7 @@ class ArticleDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           // 記事タイトル
-          article!.title.toString() ?? '向こうのタイトル',
+          article!.title.toString(),
           style: const TextStyle(
             fontSize: 12,
           ),
