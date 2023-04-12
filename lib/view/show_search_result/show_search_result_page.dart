@@ -81,6 +81,9 @@ class ShowArticle extends ConsumerWidget {
   Widget resultItem(context, qiitaData) {
     /// 記事のタイトル
     String title = qiitaData.title.toString();
+
+    /// 記事のアイコン
+    String iconUrl = qiitaData.user.profileImageUrl;
     return GestureDetector(
       child: Container(
         padding: const EdgeInsets.all(1.5),
@@ -93,6 +96,9 @@ class ShowArticle extends ConsumerWidget {
           ),
         ),
         child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(iconUrl),
+          ),
           title: Text(
             title,
             style: const TextStyle(

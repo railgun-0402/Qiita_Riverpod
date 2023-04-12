@@ -3,8 +3,7 @@ import 'package:qiita_application/model/qiita_article.dart';
 
 dynamic fetchQiitaArticles() async {
   // APIのurl
-  const url =
-      'https://qiita.com/api/v2/items?page=1&per_page=20&query=qiita+user%3AQiita';
+  const url = 'https://qiita.com/api/v2/items';
   final response = await Dio().get(url);
 
   List<dynamic> articles;
