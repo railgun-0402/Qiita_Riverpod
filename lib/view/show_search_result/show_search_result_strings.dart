@@ -15,3 +15,12 @@ const String searchArticleTabTitle = '記事検索';
 
 /// 設定タブタイトル
 const String settingTabTitle = '設定';
+
+/// システム設定に従う文言
+const String selectSystemMode = 'システムの設定に従う';
+
+/// ライトモード文言
+const String lightMode = 'ライトモード';
+
+/// ダークモード文言
+const String darkMode = 'ダークモード';
