@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qiita_application/view/settings/setting_theme/setting_theme_page.dart';
 import 'package:qiita_application/view/settings/setting_top_strings.dart';
 import 'package:qiita_application/view_model/setting/setting_top_notifier.dart';
 
@@ -33,7 +34,7 @@ class SettingTopPage extends StatelessWidget {
               SettingHeadLine(title: headerUISetting),
               SizedBox(height: height),
               // テーマの切り替え
-              SettingVersion(title: titleTheme),
+              SettingTheme(title: titleTheme),
               SizedBox(height: height),
               // 記事サイズの変更
               SettingVersion(title: titleStrSize),
@@ -146,6 +147,49 @@ class OpenMyPage extends ConsumerWidget {
           ),
           onTap: () {
             openQiitaPage(stringUri);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+/// アプリのバージョンを示す
+class SettingTheme extends StatelessWidget {
+  const SettingTheme({Key? key, required this.title}) : super(key: key);
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      child: Container(
+        padding: const EdgeInsets.all(1.5),
+        decoration: const BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.grey,
+              width: 1.2,
+            ),
+          ),
+        ),
+        child: ListTile(
+          leading: const Icon(Icons.invert_colors),
+          trailing: const Icon(Icons.chevron_right),
+          title: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.w100,
+            ),
+          ),
+          onTap: () {
+            // テーマの切り替え押下時
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const SettingThemePage(),
+              ),
+            );
           },
         ),
       ),
