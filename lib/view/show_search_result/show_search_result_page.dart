@@ -6,39 +6,35 @@ import 'package:qiita_application/view/settings/setting_top_page.dart';
 import 'package:qiita_application/view/show_search_result/show_search_result_strings.dart';
 import 'package:qiita_application/view_model/get_article_list/article_list_view_model.dart';
 
-// アプリ全体の外観モードの状態を管理するプロバイダー
-final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
+final _pageWidgets = [const ShowArticle(), const SearchArticleTopPage(), const SettingTopPage()];
 
-class ShowSearchResultState extends ConsumerWidget {
-  const ShowSearchResultState({super.key});
+class ShowSearchResult extends StatelessWidget {
+  const ShowSearchResult({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeModeProvider);
-    return MaterialApp(
-      title: 'Brightness Demo',
-      themeMode: themeMode,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: const ShowSearchResultPage(),
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: ShowSearchResultPage(),
     );
+  }
+}
+
+class ShowSearchResultPage extends StatefulWidget {
+  const ShowSearchResultPage({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return ShowSearchResultState();
   }
 }
 
 ///
 /// 記事取得結果のページ
 ///
-class ShowSearchResultPage extends ConsumerWidget {
-  const ShowSearchResultPage({Key? key}) : super(key: key);
+class ShowSearchResultState extends State<ShowSearchResultPage> {
 
+  int _currentIndex = 0;
   /// タブの高さ
   static const double tabBarHeight = 10;
 
@@ -49,64 +45,30 @@ class ShowSearchResultPage extends ConsumerWidget {
   ];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeModeProvider.notifier);
-    return DefaultTabController(
-      length: tabs.length,
-      child: Scaffold(
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
         appBar: AppBar(
           title: const Text(screenTitle),
-
-          /// テーマの設定ボタン
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: PopupMenuButton<ThemeMode>(
-                icon: const Icon(Icons.emoji_objects),
-                onSelected: (ThemeMode selectedThemeMode) =>
-                    themeMode.state = selectedThemeMode,
-                itemBuilder: (context) => <PopupMenuEntry<ThemeMode>>[
-                  const PopupMenuItem(
-                    value: ThemeMode.system,
-                    child: Text(selectSystemMode),
-                  ),
-                  const PopupMenuItem(
-                    value: ThemeMode.light,
-                    child: Text(lightMode),
-                  ),
-                  const PopupMenuItem(
-                    value: ThemeMode.dark,
-                    child: Text(darkMode),
-                  ),
-                ],
-              ),
-            ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(icon: Icon(Icons.fire_hydrant), label: '人気記事'),
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: '検索'),
+            BottomNavigationBarItem(icon: Icon(Icons.settings), label: '設定'),
           ],
-
-          /// タブバー
-          bottom: const TabBar(tabs: <Widget>[
-            Tab(
-              icon: Icon(Icons.bolt),
-            ),
-            Tab(icon: Icon(Icons.search)),
-            Tab(icon: Icon(Icons.settings)),
-          ]),
+          currentIndex: _currentIndex,
+          fixedColor: Colors.blueAccent,
+          onTap: _onItemTapped,
+          type: BottomNavigationBarType.fixed,
         ),
-
         /// body部分
-        body: const Padding(
-          padding: EdgeInsets.only(top: tabBarHeight),
-          child: TabBarView(
-            children: [
-              ShowArticle(),
-              SearchArticlePage(),
-              SettingTopPage(),
-            ],
-          ),
-        ),
+        body: _pageWidgets.elementAt(_currentIndex),
       ),
     );
   }
+  void _onItemTapped(int index) => setState(() => _currentIndex = index );
 }
 
 ///

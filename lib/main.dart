@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qiita_application/view/show_search_result/show_search_result_page.dart';
 
 void main() {
-  runApp(const ProviderScope(child: ShowSearchResultState()));
+  runApp(const ProviderScope(child: ShowSearchResult()));
 }
 
 class MyApp extends StatelessWidget {

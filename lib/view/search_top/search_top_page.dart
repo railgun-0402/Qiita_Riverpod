@@ -4,19 +4,6 @@ import 'package:qiita_application/view/detail_article/detail_article_page.dart';
 import 'package:qiita_application/view/search_top/search_top_strings.dart';
 import 'package:qiita_application/view_model/get_article_list/article_list_view_model.dart';
 
-class SearchArticlePage extends ConsumerWidget {
-  const SearchArticlePage({super.key});
-
-  @override
-  Widget build(context, ref) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: SearchArticleTopPage(),
-      ),
-    );
-  }
-}
-
 class SearchArticleTopPage extends ConsumerStatefulWidget {
   const SearchArticleTopPage({super.key});
 
@@ -27,7 +14,7 @@ class SearchArticleTopPage extends ConsumerStatefulWidget {
 
 class SearchArticleTopPageState extends ConsumerState<SearchArticleTopPage> {
   /// 検索バー
-  late TextEditingController searchController;
+  late TextEditingController _searchController;
 
   final searchState = StateProvider((_) => '');
 
@@ -35,9 +22,15 @@ class SearchArticleTopPageState extends ConsumerState<SearchArticleTopPage> {
   static const double textFieldPadding = 2;
 
   @override
-  void initState() {
-    super.initState();
-    searchController = TextEditingController(text: ref.read(searchState));
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _searchController = TextEditingController(text: ref.read(searchState));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _searchController.dispose();
   }
 
   @override
@@ -45,28 +38,45 @@ class SearchArticleTopPageState extends ConsumerState<SearchArticleTopPage> {
     /// 検索バーの値
     String searchWordNotifier = ref.read(searchState.notifier).state;
 
-    return Focus(
-      child: GestureDetector(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(textFieldPadding),
-                child: TextField(
-                  controller: searchController,
-                  decoration: const InputDecoration(
-                    hintText: hintText,
-                  ),
-                  onChanged: (value) {
-                    ref.read(searchState.notifier).update((state) => value);
-                  },
-                  onSubmitted: (searchKeyword) =>
-                      _submission(searchKeyword, context),
-                ),
-              ),
-              ShowArticle(searchWordNotifier),
-            ],
-          ),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        if (primaryFocus!.hasFocus) {
+          primaryFocus?.unfocus();
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(0),
+        child: Column(
+          children: [
+            _SearchBar(
+              searchKeywordController: _searchController,
+            ),
+            // TextButton(
+            //   onPressed: () {
+            //     FocusManager.instance.primaryFocus?.unfocus();
+            //   },
+            //   child: Text('Close Keyboard'),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.all(textFieldPadding),
+            //   child: TextField(
+            //     controller: searchController,
+            //     decoration: const InputDecoration(
+            //       border: OutlineInputBorder(),
+            //       contentPadding: EdgeInsets.only(left: 10),
+            //       hintText: hintText,
+            //     ),
+            //     onChanged: (value) {
+            //       ref.read(searchState.notifier).update((state) => value);
+            //     },
+            //     // 決定時
+            //     onSubmitted: (searchKeyword) =>
+            //         _submission(searchKeyword, context),
+            //   ),
+            // ),
+            // ShowArticle(searchWordNotifier),
+          ],
         ),
       ),
     );
@@ -78,6 +88,96 @@ class SearchArticleTopPageState extends ConsumerState<SearchArticleTopPage> {
         .searchRepositories(searchKeyword);
   }
 }
+
+class _SearchBar extends StatefulWidget {
+  const _SearchBar({
+    Key? key,
+    required TextEditingController searchKeywordController
+  }) : _searchKeywordController = searchKeywordController,
+        super(key: key);
+
+  /// 検索バーのController
+  final TextEditingController? _searchKeywordController;
+
+  @override
+  State<_SearchBar> createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<_SearchBar> {
+  /// フォーカス設定
+  final FocusNode _focusNode = FocusNode();
+
+  /// テキストフィールドのPadding
+  static const double textFieldPadding = 5;
+
+  /// 画面遷移後のフォーカス
+  final bool _autoFocus = true;
+
+  /// 検索バーのController
+  // late TextEditingController? _searchKeywordController;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        // フォーカスが当てられた時
+        print('フォーカスされた');
+      } else {
+        print('フォーカスが外された');
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(textFieldPadding),
+      child: Row(
+        children: [
+          Flexible(
+            child: TextFormField(
+              focusNode: _focusNode,
+              decoration: const InputDecoration(
+                hintText: hintText,
+                prefixIcon: Icon(
+                  Icons.search,
+                ),
+                border: OutlineInputBorder(),
+              ),
+              // autofocus: _autoFocus,
+              // controller: _searchKeywordController,
+            ),
+          ),
+          const _CancelButton(),
+        ],
+      ),
+    );
+  }
+}
+
+/// キャンセルボタン
+class _CancelButton extends StatelessWidget {
+  const _CancelButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+        onPressed: () => print('キャンセル押下'),
+        child: const Text(
+          'キャンセル',
+          style: TextStyle(color: Colors.blue),
+        ),
+    );
+  }
+}
+
 
 ///
 /// Riverpodで記事を取得し、表示する
