@@ -22,6 +22,12 @@ class SearchArticleTopPageState extends ConsumerState<SearchArticleTopPage> {
   static const double textFieldPadding = 2;
 
   @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController(text: ref.read(searchState));
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _searchController = TextEditingController(text: ref.read(searchState));
@@ -114,11 +120,12 @@ class _SearchBarState extends State<_SearchBar> {
   final bool _autoFocus = true;
 
   /// 検索バーのController
-  // late TextEditingController? _searchKeywordController;
+  late TextEditingController? _searchKeywordController;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _searchKeywordController = widget._searchKeywordController;
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
         // フォーカスが当てられた時
@@ -144,15 +151,22 @@ class _SearchBarState extends State<_SearchBar> {
           Flexible(
             child: TextFormField(
               focusNode: _focusNode,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                    onPressed: () {
+                      // TextField内の×ボタン押下時処理
+                      _searchKeywordController?.clear();
+                    },
+                    icon: const Icon(Icons.clear),
+                ),
                 hintText: hintText,
-                prefixIcon: Icon(
+                prefixIcon: const Icon(
                   Icons.search,
                 ),
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
-              // autofocus: _autoFocus,
-              // controller: _searchKeywordController,
+              autofocus: _autoFocus,
+              controller: _searchKeywordController,
             ),
           ),
           const _CancelButton(),
