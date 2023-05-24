@@ -6,7 +6,11 @@ import 'package:qiita_application/view/settings/setting_top_page.dart';
 import 'package:qiita_application/view/show_search_result/show_search_result_strings.dart';
 import 'package:qiita_application/view_model/get_article_list/article_list_view_model.dart';
 
-final _pageWidgets = [const ShowArticle(), const SearchArticleTopPage(), const SettingTopPage()];
+final _pageWidgets = [
+  const ShowArticle(),
+  // const SearchArticleTopPage(),
+  const SettingTopPage()
+];
 
 class ShowSearchResult extends StatelessWidget {
   const ShowSearchResult({Key? key}) : super(key: key);

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qiita_application/api/search_qiita_ripository.dart';
+import 'package:qiita_application/model/qiita_article.dart';
 import 'package:qiita_application/view/detail_article/detail_article_page.dart';
 import 'package:qiita_application/view/search_top/search_top_strings.dart';
 import 'package:qiita_application/view_model/get_article_list/article_list_view_model.dart';
@@ -58,6 +60,32 @@ class SearchArticleTopPageState extends ConsumerState<SearchArticleTopPage> {
             _SearchBar(
               searchKeywordController: _searchController,
             ),
+        FutureBuilder<List<QiitaArticle>>(
+          future: searchQiitaArticles('apple'),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('エラー: ${snapshot.error}');
+            } else {
+              final articles = snapshot.data;
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: articles?.length,
+                itemBuilder: (context, index) {
+                  final article = articles![index];
+                  return ListTile(
+                    title: Text(article.title ?? ''),
+                    onTap: () {
+                      // タップ時の処理
+                    },
+                  );
+                },
+              );
+            }
+          },
+        ),
             // TextButton(
             //   onPressed: () {
             //     FocusManager.instance.primaryFocus?.unfocus();
@@ -125,7 +153,11 @@ class _SearchBarState extends State<_SearchBar> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _searchKeywordController = widget._searchKeywordController;
+    _searchKeywordController = widget._searchKeywordController
+      ?..addListener(() {
+        print('文字入力検知${_searchKeywordController?.text}');
+    });
+
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
         // フォーカスが当てられた時
